@@ -38,7 +38,7 @@ def tfrecord_dataset(
     if augment is not None:
         dataset = dataset.map(augment, num_parallel_calls=AUTOTUNE)
 
-    dataset = dataset.batch(batch_size, drop_remainder=True)
+    dataset = dataset.batch(batch_size, drop_remainder=False)
 
     if augment_batch is not None:
         dataset = dataset.map(augment_batch, num_parallel_calls=AUTOTUNE)
