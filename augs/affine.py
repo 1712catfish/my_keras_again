@@ -1,4 +1,6 @@
 import tensorflow as tf
+import math as m
+import tensorflow.keras.backend as K
 
 def get_mat(rotation, shear, height_zoom, width_zoom, height_shift, width_shift):
     # returns 3x3 transformmatrix which transforms indicies
