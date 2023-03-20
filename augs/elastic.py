@@ -100,20 +100,23 @@ def generate_fractal_noise_2d(
     return noise
 
 
-def elastic_transform(image, alpha=1.0, octaves=3, sigma=1.0, random_state=None):
+@tf.function
+def elastic_transform(image, alpha=1.0, sigma=1.0, octaves=3, random_state=None):
+    # Example: elastic_transform(image, alpha=991.0, sigma=8.0)
+
     shape = image.shape
 
-    x = tf.range(shape[0], dtype="float32")  # x = 0 0 0 0 1 1 1 1 ....
-    y = tf.range(shape[1], dtype="float32")  # y = 0 1 2 3 0 1 2 3 ....
+    x = tf.range(shape[0], dtype="float32")
+    y = tf.range(shape[1], dtype="float32")
     x, y = tf.meshgrid(x, y)
 
     x = x + alpha * tf.cast(generate_fractal_noise_2d(shape[:2], (8, 8), octaves=octaves), 'float32')
     y = y + alpha * tf.cast(generate_fractal_noise_2d(shape[:2], (8, 8), octaves=octaves), 'float32')
 
-    x = tf.reshape(x, shape[0] * shape[1])
+    x = tf.reshape(x, [shape[0] * shape[1]])
     x = K.clip(x, 0, shape[0] - 1)
 
-    y = tf.reshape(y, shape[0] * shape[1])
+    y = tf.reshape(y, [shape[0] * shape[1]])
     y = K.clip(y, 0, shape[1] - 1)
 
     indices = tf.stack([y, x], axis=1)
